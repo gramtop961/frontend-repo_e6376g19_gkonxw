@@ -1,28 +1,31 @@
-import { useState } from 'react'
+import React from 'react';
+import Navbar from './components/Navbar';
+import Hero from './components/Hero';
+import Projects from './components/Projects';
+import Contact from './components/Contact';
 
-function App() {
-  const [count, setCount] = useState(0)
-
+export default function App() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg shadow-lg">
-        <h1 className="text-3xl font-bold text-gray-800 mb-4">
-          Vibe Coding Platform
-        </h1>
-        <p className="text-gray-600 mb-6">
-          Your AI-powered development environment
-        </p>
-        <div className="text-center">
-          <button
-            onClick={() => setCount(count + 1)}
-            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
-          >
-            Count is {count}
-          </button>
-        </div>
+    <div className="min-h-screen bg-[#0b0d12] text-white antialiased">
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#1b2140] via-[#0b0d12] to-[#0b0d12] opacity-70 pointer-events-none" />
+        <div className="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-gradient-to-br from-indigo-600/30 via-purple-600/20 to-cyan-500/10 blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-32 -right-32 h-[28rem] w-[28rem] rounded-full bg-gradient-to-br from-cyan-500/20 via-teal-500/10 to-indigo-600/20 blur-3xl pointer-events-none" />
       </div>
-    </div>
-  )
-}
 
-export default App
+      <Navbar />
+      <main>
+        <Hero />
+        <Projects />
+        <Contact />
+      </main>
+
+      <footer className="border-t border-white/10 mt-16">
+        <div className="max-w-6xl mx-auto px-6 py-8 text-sm text-white/60 flex items-center justify-between">
+          <span>© {new Date().getFullYear()} Your Name. All rights reserved.</span>
+          <span className="text-white/40">Built with React + Tailwind</span>
+        </div>
+      </footer>
+    </div>
+  );
+}
