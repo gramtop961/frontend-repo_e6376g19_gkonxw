@@ -1,19 +1,67 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Code } from 'lucide-react';
 import Spline from '@splinetool/react-spline';
 
 export default function Hero() {
+  const glowRef = useRef(null);
+  const orbitRef1 = useRef(null);
+  const orbitRef2 = useRef(null);
+
+  useEffect(() => {
+    function onMove(e) {
+      const { clientX: x, clientY: y } = e;
+      if (glowRef.current) {
+        glowRef.current.style.transform = `translate3d(${x - 150}px, ${y - 150}px, 0)`;
+        glowRef.current.style.opacity = '1';
+      }
+      // subtle orbiters that chase the cursor
+      if (orbitRef1.current) {
+        const dx = (x - window.innerWidth * 0.25) * 0.04;
+        const dy = (y - window.innerHeight * 0.35) * 0.04;
+        orbitRef1.current.style.transform = `translate3d(${dx}px, ${dy}px, 0)`;
+      }
+      if (orbitRef2.current) {
+        const dx = (x - window.innerWidth * 0.75) * -0.03;
+        const dy = (y - window.innerHeight * 0.6) * -0.03;
+        orbitRef2.current.style.transform = `translate3d(${dx}px, ${dy}px, 0)`;
+      }
+    }
+    window.addEventListener('mousemove', onMove);
+    return () => window.removeEventListener('mousemove', onMove);
+  }, []);
+
   return (
     <section className="relative min-h-[90vh] flex items-center" id="home">
+      {/* 3D scene */}
       <div className="absolute inset-0">
         <Spline
-          scene="https://prod.spline.design/VyGeZv58yuk8j7Yy/scene.splinecode"
+          scene="https://prod.spline.design/N8g2VNcx8Rycz93J/scene.splinecode"
           style={{ width: '100%', height: '100%' }}
         />
       </div>
 
+      {/* Cursor-reactive glow (doesn't block interaction) */}
+      <div
+        ref={glowRef}
+        className="pointer-events-none absolute h-[300px] w-[300px] rounded-full bg-[radial-gradient(circle_at_center,rgba(0,255,255,0.22),transparent_60%)] blur-2xl transition-transform duration-100"
+        style={{ left: 0, top: 0, opacity: 0 }}
+      />
+
+      {/* Soft gradient overlay for contrast */}
       <div className="absolute inset-0 bg-gradient-to-t from-[#0b0d12] via-[#0b0d12]/40 to-transparent pointer-events-none" />
+
+      {/* Floating iridescent orbs that subtly follow the cursor */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div
+          ref={orbitRef1}
+          className="absolute left-1/4 top-1/3 h-24 w-24 rounded-full bg-gradient-to-br from-cyan-400/50 via-purple-400/40 to-indigo-400/40 blur-xl mix-blend-screen"
+        />
+        <div
+          ref={orbitRef2}
+          className="absolute right-1/5 bottom-1/4 h-32 w-32 rounded-full bg-gradient-to-br from-indigo-400/40 via-cyan-400/40 to-purple-400/40 blur-xl mix-blend-screen"
+        />
+      </div>
 
       <div className="relative z-10 max-w-6xl mx-auto px-6 w-full grid md:grid-cols-2 gap-10 items-center">
         <div className="space-y-6">
@@ -54,14 +102,14 @@ export default function Hero() {
           >
             <a
               href="#projects"
-              className="group inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-500 px-5 py-3 font-medium text-white shadow-lg shadow-indigo-900/30 transition-transform hover:scale-[1.02] active:scale-[0.98]"
+              className="group inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-500 px-5 py-3 font-medium text-white shadow-lg shadow-indigo-900/30 transition-transform hover:scale-[1.03] active:scale-[0.98] will-change-transform"
             >
               View Work
               <ArrowRight className="transition-transform group-hover:translate-x-0.5" size={18} />
             </a>
             <a
               href="#contact"
-              className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-5 py-3 font-medium text-white/90 hover:bg-white/10 transition-colors"
+              className="group inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-5 py-3 font-medium text-white/90 hover:bg-white/10 transition-transform hover:-translate-y-0.5"
             >
               <Code size={18} />
               Get in touch

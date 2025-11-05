@@ -4,6 +4,8 @@ import { ExternalLink, Github } from 'lucide-react';
 
 function Tilt({ children }) {
   const ref = useRef(null);
+  const glareRef = useRef(null);
+
   function onMove(e) {
     const el = ref.current; if (!el) return;
     const r = el.getBoundingClientRect();
@@ -12,12 +14,27 @@ function Tilt({ children }) {
     const rx = (+10 * py).toFixed(2);
     const ry = (-10 * px).toFixed(2);
     el.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+
+    // dynamic glare
+    if (glareRef.current) {
+      const angle = Math.atan2(py, px) * (180 / Math.PI) + 180;
+      const intensity = Math.min(0.6, Math.hypot(px, py) * 1.2);
+      glareRef.current.style.background = `conic-gradient(from ${angle}deg, rgba(255,255,255,${intensity}) 0deg, transparent 60deg)`;
+      glareRef.current.style.opacity = '1';
+    }
   }
   function onLeave() {
     const el = ref.current; if (el) el.style.transform = 'perspective(900px) rotateX(0deg) rotateY(0deg)';
+    if (glareRef.current) glareRef.current.style.opacity = '0';
   }
   return (
-    <div ref={ref} onMouseMove={onMove} onMouseLeave={onLeave} className="transition-transform duration-200 will-change-transform">
+    <div
+      ref={ref}
+      onMouseMove={onMove}
+      onMouseLeave={onLeave}
+      className="transition-transform duration-200 will-change-transform relative"
+    >
+      <div ref={glareRef} className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-200" />
       {children}
     </div>
   );
@@ -28,7 +45,7 @@ const projects = [
     title: 'Realtime Chat App',
     desc: 'Socket rooms, presence, reactions, and graceful offline states.',
     stack: ['React', 'Node.js', 'Socket.io', 'Tailwind'],
-    image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1600&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1611606063065-ee7946f0787a?ixid=M3w3OTkxMTl8MHwxfHNlYXJjaHwxfHxSZWFsdGltZSUyMENoYXQlMjBBcHB8ZW58MHwwfHx8MTc2MjMyOTY3N3ww&ixlib=rb-4.1.0&w=1600&auto=format&fit=crop&q=80',
     url: '#',
     repo: '#',
   },
@@ -36,7 +53,7 @@ const projects = [
     title: 'E‑commerce Platform',
     desc: 'Headless storefront with secure checkout and analytics.',
     stack: ['Next.js', 'Stripe', 'Prisma', 'Postgres'],
-    image: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?q=80&w=1600&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1648134859196-3aa762e9440d?ixid=M3w3OTkxMTl8MHwxfHNlYXJjaHwxfHxFJUUyJTgwJTkxY29tbWVyY2UlMjBQbGF0Zm9ybXxlbnwwfDB8fHwxNzYyMzI5Njc4fDA&ixlib=rb-4.1.0&w=1600&auto=format&fit=crop&q=80',
     url: '#',
     repo: '#',
   },
@@ -44,7 +61,7 @@ const projects = [
     title: 'Portfolio Engine',
     desc: 'Schema‑driven portfolio with MDX, themes, and animations.',
     stack: ['Vite', 'Framer Motion', 'MDX'],
-    image: 'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1600&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1641350625112-3b1d73c71418?ixid=M3w3OTkxMTl8MHwxfHNlYXJjaHwxfHxQb3J0Zm9saW8lMjBFbmdpbmV8ZW58MHwwfHx8MTc2MjMyOTY3OHww&ixlib=rb-4.1.0&w=1600&auto=format&fit=crop&q=80',
     url: '#',
     repo: '#',
   },
@@ -60,7 +77,7 @@ const projects = [
     title: '3D Product Teaser',
     desc: 'Interactive 3D teaser with Spline and motion‑driven hotspots.',
     stack: ['React', 'Spline', 'Framer Motion'],
-    image: 'https://images.unsplash.com/photo-1518773553398-650c184e0bb3?q=80&w=1600&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1518728719028-71e4966950e4?ixid=M3w3OTkxMTl8MHwxfHNlYXJjaHwxfHwzRCUyMFByb2R1Y3QlMjBUZWFzZXJ8ZW58MHwwfHx8MTc2MjMyOTY4M3ww&ixlib=rb-4.1.0&w=1600&auto=format&fit=crop&q=80',
     url: '#',
     repo: '#',
   },
@@ -90,6 +107,9 @@ export default function Projects() {
           >
             <Tilt>
               <div className="group relative rounded-2xl overflow-hidden border border-white/10 bg-white/5">
+                {/* animated accent border */}
+                <div className="pointer-events-none absolute -inset-px rounded-2xl bg-[conic-gradient(from_180deg,rgba(99,102,241,0.15),rgba(168,85,247,0.15),rgba(34,211,238,0.15),rgba(99,102,241,0.15))] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
                 <div className="relative">
                   <img
                     src={p.image}
@@ -112,14 +132,26 @@ export default function Projects() {
                   <div className="flex items-center gap-3 pt-1">
                     <a
                       href={p.url}
-                      className="inline-flex items-center gap-1 text-sm text-white/80 hover:text-white transition-colors"
+                      className="magnetic inline-flex items-center gap-1 text-sm text-white/80 hover:text-white transition-[color,transform] will-change-transform"
+                      onMouseMove={(e) => {
+                        const t = e.currentTarget; const r = t.getBoundingClientRect();
+                        const px = (e.clientX - r.left) / r.width - 0.5; const py = (e.clientY - r.top) / r.height - 0.5;
+                        t.style.transform = `translate3d(${px * 6}px, ${py * 6}px, 0)`;
+                      }}
+                      onMouseLeave={(e) => { e.currentTarget.style.transform = 'translate3d(0,0,0)'; }}
                     >
                       <ExternalLink size={16} />
                       Live
                     </a>
                     <a
                       href={p.repo}
-                      className="inline-flex items-center gap-1 text-sm text-white/80 hover:text-white transition-colors"
+                      className="magnetic inline-flex items-center gap-1 text-sm text-white/80 hover:text-white transition-[color,transform] will-change-transform"
+                      onMouseMove={(e) => {
+                        const t = e.currentTarget; const r = t.getBoundingClientRect();
+                        const px = (e.clientX - r.left) / r.width - 0.5; const py = (e.clientY - r.top) / r.height - 0.5;
+                        t.style.transform = `translate3d(${px * 6}px, ${py * 6}px, 0)`;
+                      }}
+                      onMouseLeave={(e) => { e.currentTarget.style.transform = 'translate3d(0,0,0)'; }}
                     >
                       <Github size={16} />
                       Code
