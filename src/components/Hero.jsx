@@ -5,10 +5,10 @@ import Spline from '@splinetool/react-spline';
 
 export default function Hero() {
   return (
-    <section className="relative min-h-[90vh] flex items-center" id="about">
+    <section className="relative min-h-[90vh] flex items-center" id="home">
       <div className="absolute inset-0">
         <Spline
-          scene="https://prod.spline.design/VJLoxp84lCdVfdZu/scene.splinecode"
+          scene="https://prod.spline.design/VyGeZv58yuk8j7Yy/scene.splinecode"
           style={{ width: '100%', height: '100%' }}
         />
       </div>
@@ -24,7 +24,7 @@ export default function Hero() {
             className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/80"
           >
             <span className="inline-block h-2 w-2 rounded-full bg-gradient-to-r from-indigo-400 to-cyan-400" />
-            Available for freelance work
+            Minimal. Interactive. Futuristic.
           </motion.div>
 
           <motion.h1
@@ -33,8 +33,8 @@ export default function Hero() {
             transition={{ duration: 0.8, ease: 'easeOut', delay: 0.05 }}
             className="text-4xl md:text-6xl font-extrabold tracking-tight"
           >
-            Building immersive web experiences with
-            <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-cyan-300 bg-clip-text text-transparent"> JavaScript</span>
+            Crafting modern experiences
+            <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-cyan-300 bg-clip-text text-transparent"> for the web</span>
           </motion.h1>
 
           <motion.p
@@ -43,8 +43,7 @@ export default function Hero() {
             transition={{ duration: 0.9, ease: 'easeOut', delay: 0.12 }}
             className="text-white/70 leading-relaxed max-w-xl"
           >
-            I’m a full‑stack JavaScript developer crafting performant, delightful apps.
-            I specialize in React, Node.js, and modern UX with thoughtful animations.
+            A developer focused on clarity, performance, and delightful motion. Explore the work and get in touch.
           </motion.p>
 
           <motion.div
@@ -68,26 +67,6 @@ export default function Hero() {
               Get in touch
             </a>
           </motion.div>
-
-          <motion.ul
-            initial="hidden"
-            animate="show"
-            variants={{
-              hidden: { opacity: 0 },
-              show: { opacity: 1, transition: { staggerChildren: 0.08 } },
-            }}
-            className="mt-4 grid grid-cols-2 sm:flex sm:flex-wrap gap-3 text-sm"
-          >
-            {['React', 'Node.js', 'TypeScript', 'Next.js', 'GraphQL', 'Tailwind'].map((skill) => (
-              <motion.li
-                key={skill}
-                variants={{ hidden: { opacity: 0, y: 8 }, show: { opacity: 1, y: 0 } }}
-                className="rounded-md border border-white/10 bg-white/5 px-3 py-1 text-white/70"
-              >
-                {skill}
-              </motion.li>
-            ))}
-          </motion.ul>
         </div>
 
         <motion.div
